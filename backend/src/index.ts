@@ -10,13 +10,19 @@ app.get("/", (req, res) => {
 });
 
 app.post("/feedback", (req, res) => {
-    const feedback = req.body;
+    const { name, message } = req.body;
 
-    console.log("Feedback received is", feedback);
+    if (!name || !message || typeof name !== "string" || typeof message !== "string" || name.trim() === "" || message.trim() === "") {
+        return res.status(400).json({
+            error: "Name and message are required and cannot be empty."
+        });
+    }
 
-    res.status(201).json({
+    console.log("Feedback received:", { name, message });
+
+    return res.status(201).json({
         message: "Feedback received successfully",
-        data: feedback,
+        data: { name, message }
     });
 });
 
