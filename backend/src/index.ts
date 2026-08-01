@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import morgan from "morgan";
+
 import express from "express";
 import feedbackRoutes from "./routes/feedbackRoutes";
 
@@ -14,6 +16,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.send("Hello from Express server!");
 });
+
+app.use(morgan("dev"));
 
 app.use("/feedback", feedbackRoutes);
 
