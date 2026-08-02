@@ -6,12 +6,20 @@ import morgan from "morgan";
 import express from "express";
 import feedbackRoutes from "./routes/feedbackRoutes";
 
+import cors from "cors";
+
 import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+
+app.use(
+    cors({
+        origin: "http://localhost:5500",
+    })
+);
 
 app.get("/", (req, res) => {
     res.send("Hello from Express server!");
