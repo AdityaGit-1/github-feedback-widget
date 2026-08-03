@@ -2,6 +2,7 @@ const form = document.getElementById("feedbackForm");
 const nameInput = document.getElementById("name");
 const messageInput = document.getElementById("message");
 const status = document.getElementById("status");
+const submitBtn = document.getElementById("submitBtn");
 
 form.addEventListener("submit", async function (event) {
 
@@ -10,7 +11,9 @@ form.addEventListener("submit", async function (event) {
     const name = nameInput.value.trim();
     const message = messageInput.value.trim();
 
-    status.textContent = "Submitting feedback...";
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
+
 
     try {
 
@@ -36,12 +39,20 @@ form.addEventListener("submit", async function (event) {
         }
 
         status.textContent = data.message;
+        status.className = "success";
 
         form.reset();
 
     } catch (error) {
 
         status.textContent = error.message;
+        status.className = "error";
+
+    }
+    finally{
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Submit Feedback";
 
     }
 

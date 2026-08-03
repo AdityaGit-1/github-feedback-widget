@@ -93,3 +93,21 @@ button:hover {
 
     font-weight: bold;
 }
+
+.success {
+    color: #16a34a;
+    background-color: #dcfce7;
+    border: 1px solid #16a34a;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 15px;
+}
+
+.error {
+    color: #dc2626;
+    background-color: #fee2e2;
+    border: 1px solid #dc2626;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 15px;
+}
