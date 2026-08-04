@@ -4,6 +4,16 @@ const messageInput = document.getElementById("message");
 const status = document.getElementById("status");
 const submitBtn = document.getElementById("submitBtn");
 
+function setLoadingState(isLoading) {
+    submitBtn.disabled = isLoading;
+
+    if (isLoading) {
+        submitBtn.textContent = "Submitting...";
+    } else {
+        submitBtn.textContent = "Submit Feedback";
+    }
+}
+
 form.addEventListener("submit", async function (event) {
 
     event.preventDefault();
@@ -11,9 +21,7 @@ form.addEventListener("submit", async function (event) {
     const name = nameInput.value.trim();
     const message = messageInput.value.trim();
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Submitting...";
-
+    setLoadingState(true);
 
     try {
 
@@ -51,8 +59,7 @@ form.addEventListener("submit", async function (event) {
     }
     finally{
 
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Submit Feedback";
+    setLoadingState(false);
 
     }
 
