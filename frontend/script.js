@@ -43,12 +43,42 @@ function showStatus(message, type) {
 
 }
 
+//Guard clause to validate inputs
+function validateInputs(name, message) {
+
+    if (!name) {
+        showStatus("Name is required.", "error");
+        return false;
+    }
+
+    if (name.length > 50) {
+        showStatus("Name cannot exceed 50 characters.", "error");
+        return false;
+    }
+
+    if (!message) {
+        showStatus("Feedback is required.", "error");
+        return false;
+    }
+
+    if (message.length > 500) {
+        showStatus("Feedback cannot exceed 500 characters.", "error");
+        return false;
+    }
+
+    return true;
+}
+
 //Event handler 
 async function handleSubmit(event) {
     event.preventDefault();
 
     const name = nameInput.value.trim();
     const message = messageInput.value.trim();
+
+    if (!validateInputs(name, message)) {
+        return;
+    }
 
     setLoadingState(true);
 
