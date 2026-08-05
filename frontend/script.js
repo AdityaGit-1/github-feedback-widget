@@ -4,6 +4,7 @@ const nameInput = document.getElementById("name");
 const messageInput = document.getElementById("message");
 const status = document.getElementById("status");
 const submitBtn = document.getElementById("submitBtn");
+const charCount = document.getElementById("charCount");
 
 //UI helper 
 function setLoadingState(isLoading) {
@@ -69,6 +70,17 @@ function validateInputs(name, message) {
     return true;
 }
 
+//Character count update 
+function updateCharacterCount() {
+    charCount.textContent = `${messageInput.value.length} / 500`;
+}
+
+//Clear status message when user starts typing
+function clearStatus() {
+    status.textContent = "";
+    status.className = "";
+}
+
 //Event handler 
 async function handleSubmit(event) {
     event.preventDefault();
@@ -89,6 +101,8 @@ async function handleSubmit(event) {
 
         form.reset();
 
+        updateCharacterCount();
+
     } catch (error) {
 
         showStatus(error.message, "error");
@@ -101,3 +115,9 @@ async function handleSubmit(event) {
 }
 
 form.addEventListener("submit", handleSubmit);
+
+nameInput.addEventListener("input", clearStatus);
+
+messageInput.addEventListener("input", clearStatus);
+
+messageInput.addEventListener("input", updateCharacterCount);
