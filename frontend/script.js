@@ -5,6 +5,9 @@ const messageInput = document.getElementById("message");
 const status = document.getElementById("status");
 const submitBtn = document.getElementById("submitBtn");
 const charCount = document.getElementById("charCount");
+const githubUsername = document.getElementById("githubUsername");
+const fetchProfileBtn = document.getElementById("fetchProfileBtn");
+const githubProfile = document.getElementById("githubProfile");
 
 //UI helper 
 function setLoadingState(isLoading) {
@@ -81,6 +84,11 @@ function clearStatus() {
     status.className = "";
 }
 
+//Clear GitHub profile 
+function clearGithubProfile() {
+    githubProfile.innerHTML = "";
+}
+
 //Event handler 
 async function handleSubmit(event) {
     event.preventDefault();
@@ -114,6 +122,58 @@ async function handleSubmit(event) {
     }
 }
 
+async function fetchGithubProfile(username) {
+
+    const response = await fetch(
+        `https://api.github.com/users/${username}`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message);
+    }
+
+    return data;
+}
+
+function renderGithubProfile(profile) {
+
+    githubProfile.innerHTML = `
+        <div class="profile-card">
+
+            <img
+                src="${profile.avatar_url}"
+                alt="${profile.login}'s Avatar"
+                class="profile-avatar"
+            >
+
+            <h3>${profile.name || profile.login}</h3>
+
+            <p class="username">@${profile.login}</p>
+
+            <div class="profile-stats">
+
+                <p><strong>Followers:</strong> ${profile.followers}</p>
+
+                <p><strong>Following:</strong> ${profile.following}</p>
+
+                <p><strong>Repositories:</strong> ${profile.public_repos}</p>
+
+            </div>
+
+            <a
+                href="${profile.html_url}"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                View GitHub Profile
+            </a>
+
+        </div>
+    `;
+}
+
 form.addEventListener("submit", handleSubmit);
 
 nameInput.addEventListener("input", clearStatus);
@@ -121,3 +181,5 @@ nameInput.addEventListener("input", clearStatus);
 messageInput.addEventListener("input", clearStatus);
 
 messageInput.addEventListener("input", updateCharacterCount);
+
+fetchProfileBtn.addEventListener("click", handleFetchProfile);

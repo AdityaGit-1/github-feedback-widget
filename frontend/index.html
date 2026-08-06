@@ -13,41 +13,47 @@
 
     <div class="container">
 
-        <h1>GitHub Feedback Widget</h1>
+        <div class="feedback-card">
 
-        <form id="feedbackForm">
+            <h2>Feedback Form</h2>
 
-            <div class="form-group">
-                <label for="name">Name</label>
-
-                <input
-                    type="text"
-                    id="name"
-                    placeholder="Enter your name"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="message">Feedback</label>
+            <form id="feedbackForm">
 
                 <textarea
                     id="message"
-                    placeholder="Write your feedback..."
-                    rows="5"
-                    required
+                    placeholder="Enter your feedback here..."
+                    maxlength="500"
                 ></textarea>
 
-                <p id="charCount">0 / 500</p>
+                <div class="char-count" id="charCount">0/500</div>
+
+                <button type="submit" id="submitBtn">
+                    Submit Feedback
+                </button>
+
+            </form>
+
             </div>
 
-            <button id="submitBtn" type="submit">
-                Submit Feedback
+        <div class="github-card">
+
+            <h2>GitHub Profile</h2>
+
+            <input
+                type="text"
+                id="githubUsername"
+                placeholder="Enter GitHub username"
+            >
+
+            <button id="fetchProfileBtn">
+                Fetch Profile
             </button>
 
-            <p id="status"></p>
+            <div id="githubProfile">
 
-        </form>
+            </div>
+
+        </div>
 
     </div>
 
