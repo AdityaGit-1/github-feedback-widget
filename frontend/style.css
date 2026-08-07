@@ -229,6 +229,40 @@ textarea:disabled {
     margin-bottom: 20px;
 }
 
+.recent-searches {
+    margin-bottom: 20px;
+}
+
+.recent-searches-label {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.recent-search-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.recent-search-chip {
+    width: auto;
+
+    padding: 6px 12px;
+
+    background-color: var(--chip-bg);
+    color: var(--text);
+
+    border-radius: 999px;
+
+    font-size: 13px;
+}
+
+.recent-search-chip:hover {
+    background-color: var(--chip-hover-bg);
+}
+
 .profile-card {
     text-align: center;
 }

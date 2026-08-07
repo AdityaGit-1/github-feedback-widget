@@ -133,6 +133,76 @@ function clearGithubProfile() {
     githubProfile.innerHTML = "";
 }
 
+//Recent GitHub username searches, persisted in localStorage
+const RECENT_SEARCHES_KEY = "recentGithubSearches";
+const MAX_RECENT_SEARCHES = 5;
+
+//Read recent searches from localStorage
+function getRecentSearches() {
+    try {
+        const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
+        return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+//Save a username to the front of recent searches, de-duplicated and capped
+function saveRecentSearch(username) {
+    const existing = getRecentSearches().filter(
+        (entry) => entry.toLowerCase() !== username.toLowerCase()
+    );
+
+    const updated = [username, ...existing].slice(0, MAX_RECENT_SEARCHES);
+
+    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
+
+    renderRecentSearches();
+}
+
+//Render recent searches as clickable chips
+function renderRecentSearches() {
+    const searches = getRecentSearches();
+
+    if (searches.length === 0) {
+        recentSearches.innerHTML = "";
+        return;
+    }
+
+    let chipsHtml = "";
+
+    for (const username of searches) {
+        chipsHtml += `
+            <button
+                type="button"
+                class="recent-search-chip"
+                data-username="${username}"
+            >
+                ${username}
+            </button>
+        `;
+    }
+
+    recentSearches.innerHTML = `
+        <p class="recent-searches-label">Recent Searches</p>
+        <div class="recent-search-chips">${chipsHtml}</div>
+    `;
+}
+
+//Event handler for clicking a recent search chip
+function handleRecentSearchClick(event) {
+    const chip = event.target.closest(".recent-search-chip");
+
+    if (!chip) {
+        return;
+    }
+
+    githubUsername.value = chip.dataset.username;
+
+    handleFetchProfile();
+}
+
+
 //Event handler 
 async function handleSubmit(event) {
     event.preventDefault();
