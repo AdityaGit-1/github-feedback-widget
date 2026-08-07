@@ -12,10 +12,12 @@ export const submitFeedback = async (
     try {
         const { name, message } = validateFeedback(req.body);
 
-        await createGitHubIssue(name, message);
+        const issue =await createGitHubIssue(name, message);
 
         return res.status(201).json({
             message: "Feedback submitted successfully.",
+            issueNumber: issue.number,
+            issueUrl: issue.html_url,
         });
 
     } catch (error) {
