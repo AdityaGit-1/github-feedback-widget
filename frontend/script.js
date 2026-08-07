@@ -40,34 +40,77 @@ async function submitFeedback(name, message) {
     return data;
 }
 
-// Function to show status messages
-function showStatus(message, type) {
+let statusHideTimeout = null;
 
-    status.textContent = message;
-    status.className = type;
+//Shared card builder so success/error markup stays DRY
+function renderStatusCard(type, innerHtml) {
 
+    clearStatusTimeout();
+
+    status.innerHTML = `
+        <div class="status-card ${type}">
+            ${innerHtml}
+        </div>
+    `;
+}
+
+//Success card, optionally including the created GitHub issue link
+function showSuccessStatus(message, issue) {
+
+    const issueDetails = issue
+        ? `
+            <p class="status-detail">Issue #${issue.issueNumber} created successfully.</p>
+            <a
+                href="${issue.issueUrl}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="status-link"
+            >
+                View on GitHub
+            </a>
+        `
+        : "";
+
+    renderStatusCard(
+        "success",
+        `<p class="status-message">${message}</p>${issueDetails}`
+    );
+
+    statusHideTimeout = setTimeout(clearStatus, 5000);
+}
+
+//Error card
+function showErrorStatus(message) {
+    renderStatusCard("error", `<p class="status-message">${message}</p>`);
+}
+
+function clearStatusTimeout() {
+    if (statusHideTimeout) {
+        clearTimeout(statusHideTimeout);
+        statusHideTimeout = null;
+    }
 }
 
 //Guard clause to validate inputs
 function validateInputs(name, message) {
 
     if (!name) {
-        showStatus("Name is required.", "error");
+        showErrorStatus("Name is required.");
         return false;
     }
 
     if (name.length > 50) {
-        showStatus("Name cannot exceed 50 characters.", "error");
+        showErrorStatus("Name cannot exceed 50 characters.");
         return false;
     }
 
     if (!message) {
-        showStatus("Feedback is required.", "error");
+        showErrorStatus("Feedback is required.");
         return false;
     }
 
     if (message.length > 500) {
-        showStatus("Feedback cannot exceed 500 characters.", "error");
+        showErrorStatus("Feedback cannot exceed 500 characters.");
         return false;
     }
 
@@ -106,7 +149,10 @@ async function handleSubmit(event) {
     try {
         const data = await submitFeedback(name, message);
 
-        showStatus(data.message, "success");
+        showSuccessStatus(data.message, {
+            issueNumber: data.issueNumber,
+            issueUrl: data.issueUrl,
+        });
 
         form.reset();
 
@@ -114,7 +160,7 @@ async function handleSubmit(event) {
 
     } catch (error) {
 
-        showStatus(error.message, "error");
+        showErrorStatus(error.message);
 
     } finally {
 
