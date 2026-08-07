@@ -106,10 +106,6 @@ async function handleSubmit(event) {
     try {
         const data = await submitFeedback(name, message);
 
-        const feedbacks = await fetchFeedbacks();
-
-        renderFeedbackList(feedbacks);
-
         showStatus(data.message, "success");
 
         form.reset();
@@ -225,68 +221,6 @@ function renderGithubProfile(profile) {
     `;
 }
 
-//Fetch feedbacks 
-async function fetchFeedbacks() {
-    const response = await fetch("http://localhost:3000/feedback");
-
-    const data = await response.json();
-
-    if (!response.ok) {
-        throw new Error(data.message);
-    }
-
-    return data;
-
-}
-
-//Initialize feedbacks on page load
-async function initializeFeedbacks() {
-
-    try {
-
-        const feedbacks = await fetchFeedbacks();
-
-        renderFeedbackList(feedbacks);
-
-    } catch (error) {
-
-        console.error(error);
-
-    }
-
-}
-
-//Feedback list render 
-function renderFeedbackList(feedbacks) {
-
-    if (feedbacks.length === 0) {
-
-        feedbackList.innerHTML = `
-            <p>No feedback available yet.</p>
-        `;
-
-        return;
-    }
-
-    let html = "";
-
-    for (const feedback of feedbacks) {
-
-        html += `
-            <div class="feedback-item">
-
-                <h4>${feedback.name}</h4>
-
-                <p>${feedback.message}</p>
-
-            </div>
-        `;
-    }
-
-    feedbackList.innerHTML = html;
-
-}
-
 form.addEventListener("submit", handleSubmit);
 
 nameInput.addEventListener("input", clearStatus);
@@ -298,5 +232,3 @@ messageInput.addEventListener("input", updateCharacterCount);
 fetchProfileBtn.addEventListener("click", handleFetchProfile);
 
 githubUsername.addEventListener("input", clearGithubProfile);
-
-initializeFeedbacks();
