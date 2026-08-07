@@ -220,3 +220,23 @@ button:hover {
     }
 
 }
+
+#feedbackList {
+    margin-top: 20px;
+}
+
+.feedback-item {
+    background: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border-left: 4px solid #24292e;
+}
+
+.feedback-item h4 {
+    margin-bottom: 8px;
+}
+
+.feedback-item p {
+    color: #555;
+}

@@ -8,6 +8,7 @@ const charCount = document.getElementById("charCount");
 const githubUsername = document.getElementById("githubUsername");
 const fetchProfileBtn = document.getElementById("fetchProfileBtn");
 const githubProfile = document.getElementById("githubProfile");
+const feedbackList = document.getElementById("feedbackList");
 
 //UI helper 
 function setLoadingState(isLoading) {
@@ -105,6 +106,10 @@ async function handleSubmit(event) {
     try {
         const data = await submitFeedback(name, message);
 
+        const feedbacks = await fetchFeedbacks();
+
+        renderFeedbackList(feedbacks);
+
         showStatus(data.message, "success");
 
         form.reset();
@@ -122,6 +127,7 @@ async function handleSubmit(event) {
     }
 }
 
+//Fetch Github profile
 async function fetchGithubProfile(username) {
 
     const response = await fetch(
@@ -137,6 +143,7 @@ async function fetchGithubProfile(username) {
     return data;
 }
 
+//Event handler for fetching
 async function handleFetchProfile() {
 
     const username = githubUsername.value.trim();
@@ -180,6 +187,7 @@ async function handleFetchProfile() {
 
 }
 
+//Render Github profile
 function renderGithubProfile(profile) {
 
     githubProfile.innerHTML = `
@@ -217,6 +225,68 @@ function renderGithubProfile(profile) {
     `;
 }
 
+//Fetch feedbacks 
+async function fetchFeedbacks() {
+    const response = await fetch("http://localhost:3000/feedback");
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message);
+    }
+
+    return data;
+
+}
+
+//Initialize feedbacks on page load
+async function initializeFeedbacks() {
+
+    try {
+
+        const feedbacks = await fetchFeedbacks();
+
+        renderFeedbackList(feedbacks);
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+//Feedback list render 
+function renderFeedbackList(feedbacks) {
+
+    if (feedbacks.length === 0) {
+
+        feedbackList.innerHTML = `
+            <p>No feedback available yet.</p>
+        `;
+
+        return;
+    }
+
+    let html = "";
+
+    for (const feedback of feedbacks) {
+
+        html += `
+            <div class="feedback-item">
+
+                <h4>${feedback.name}</h4>
+
+                <p>${feedback.message}</p>
+
+            </div>
+        `;
+    }
+
+    feedbackList.innerHTML = html;
+
+}
+
 form.addEventListener("submit", handleSubmit);
 
 nameInput.addEventListener("input", clearStatus);
@@ -228,3 +298,5 @@ messageInput.addEventListener("input", updateCharacterCount);
 fetchProfileBtn.addEventListener("click", handleFetchProfile);
 
 githubUsername.addEventListener("input", clearGithubProfile);
+
+initializeFeedbacks();
