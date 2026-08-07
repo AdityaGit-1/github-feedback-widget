@@ -137,6 +137,49 @@ async function fetchGithubProfile(username) {
     return data;
 }
 
+async function handleFetchProfile() {
+
+    const username = githubUsername.value.trim();
+
+    if (!username) {
+
+        githubProfile.innerHTML = `
+            <p class="error">
+                Please enter a GitHub username.
+            </p>
+    `;
+
+        return;
+    }
+
+    clearGithubProfile();
+
+    fetchProfileBtn.disabled = true;
+    fetchProfileBtn.textContent = "Loading...";
+
+    try {
+
+        const profile = await fetchGithubProfile(username);
+
+        renderGithubProfile(profile);
+
+    } catch (error) {
+
+        githubProfile.innerHTML = `
+            <p class="error">
+                ${error.message}
+            </p>
+        `;
+
+    } finally {
+
+        fetchProfileBtn.disabled = false;
+        fetchProfileBtn.textContent = "Fetch Profile";
+
+    }
+
+}
+
 function renderGithubProfile(profile) {
 
     githubProfile.innerHTML = `
@@ -183,3 +226,5 @@ messageInput.addEventListener("input", clearStatus);
 messageInput.addEventListener("input", updateCharacterCount);
 
 fetchProfileBtn.addEventListener("click", handleFetchProfile);
+
+githubUsername.addEventListener("input", clearGithubProfile);
