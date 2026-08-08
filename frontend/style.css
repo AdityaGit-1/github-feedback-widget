@@ -1,3 +1,43 @@
+:root {
+    --bg: #f4f4f4;
+    --card-bg: #ffffff;
+    --text: #1f2328;
+    --text-muted: #6b7280;
+    --border: #cccccc;
+    --input-bg: #ffffff;
+    --input-disabled-bg: #f0f0f0;
+    --accent: #24292e;
+    --accent-hover: #444d56;
+    --accent-text: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --chip-bg: #eef0f2;
+    --chip-hover-bg: #dfe3e6;
+    --success-text: #16a34a;
+    --success-bg: #dcfce7;
+    --error-text: #dc2626;
+    --error-bg: #fee2e2;
+}
+
+[data-theme="dark"] {
+    --bg: #0d1117;
+    --card-bg: #161b22;
+    --text: #e6edf3;
+    --text-muted: #9198a1;
+    --border: #30363d;
+    --input-bg: #0d1117;
+    --input-disabled-bg: #21262d;
+    --accent: #2f81f7;
+    --accent-hover: #1f6feb;
+    --accent-text: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --chip-bg: #21262d;
+    --chip-hover-bg: #30363d;
+    --success-text: #3fb950;
+    --success-bg: #0f2b18;
+    --error-text: #f85149;
+    --error-bg: #2b1113;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,13 +46,35 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #f4f4f4;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background-color: var(--bg);
+    color: var(--text);
 
     min-height: 100vh;
+
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px 20px 0;
+}
+
+.app-title {
+    font-size: 20px;
+}
+
+#themeToggleBtn {
+    width: auto;
+
+    padding: 8px 12px;
+
+    font-size: 18px;
+    line-height: 1;
 }
 
 .container {
@@ -54,11 +116,22 @@ textarea {
 
     padding: 12px;
 
-    border: 1px solid #ccc;
+    background-color: var(--input-bg);
+    color: var(--text);
+
+    border: 1px solid var(--border);
 
     border-radius: 5px;
 
     font-size: 16px;
+
+    transition: border-color 0.2s ease, background-color 0.3s ease;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent);
 }
 
 textarea {
@@ -70,9 +143,9 @@ button {
 
     padding: 12px;
 
-    background-color: #24292e;
+    background-color: var(--accent);
 
-    color: white;
+    color: var(--accent-text);
 
     border: none;
 
@@ -82,11 +155,11 @@ button {
 
     font-size: 16px;
 
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease, transform 0.15s ease;
 }
 
 button:hover {
-    background-color: #444d56;
+    background-color: var(--accent-hover);
 }
 
 button:active {
@@ -128,7 +201,6 @@ textarea:disabled {
 }
 
 #status {
-
     text-align: center;
 }
 
@@ -198,30 +270,30 @@ textarea:disabled {
     }
 }
 
-.feedback-card {
-    flex: 1;
-    min-width: 380px;
-
-    background: white;
-
-    padding: 30px;
-
-    border-radius: 10px;
-
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
+.feedback-card,
 .github-card {
     flex: 1;
     min-width: 320px;
 
-    background: white;
+    background: var(--card-bg);
 
     padding: 30px;
 
     border-radius: 10px;
 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px var(--shadow);
+
+    transition: background-color 0.3s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.feedback-card {
+    min-width: 380px;
+}
+
+.feedback-card:hover,
+.github-card:hover {
+    box-shadow: 0 6px 16px var(--shadow);
+    transform: translateY(-2px);
 }
 
 #githubUsername {
@@ -279,14 +351,14 @@ textarea:disabled {
 
     object-fit: cover;
 
-    border: 3px solid #24292e;
+    border: 3px solid var(--accent);
 
     margin-bottom: 15px;
 }
 
 .username {
-    color: gray;
-    margin-bottom: 20px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
 }
 
 .profile-bio {

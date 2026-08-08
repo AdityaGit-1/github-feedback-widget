@@ -1,3 +1,8 @@
+// Config
+// For local development this points at the local backend.
+// When deploying (see README → Deployment), update this to your deployed backend URL.
+const API_BASE_URL = "http://localhost:3000";
+
 // DOM elements
 const form = document.getElementById("feedbackForm");
 const nameInput = document.getElementById("name");
@@ -9,13 +14,47 @@ const githubUsername = document.getElementById("githubUsername");
 const fetchProfileBtn = document.getElementById("fetchProfileBtn");
 const githubProfile = document.getElementById("githubProfile");
 const recentSearches = document.getElementById("recentSearches");
+const themeToggleBtn = document.getElementById("themeToggleBtn");
+
+//Theme (dark mode), persisted in localStorage
+const THEME_STORAGE_KEY = "theme";
+
+//Apply a theme by setting the data attribute the CSS variables key off
+function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    themeToggleBtn.textContent = theme === "dark" ? "☀️" : "🌙";
+}
+
+//Load the saved theme, falling back to the OS preference, and apply it
+function initTheme() {
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+
+    const theme = savedTheme || (
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light"
+    );
+
+    applyTheme(theme);
+}
+
+//Toggle between light and dark, persisting the choice
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    const nextTheme = currentTheme === "dark" ? "light" : "dark";
+
+    localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    applyTheme(nextTheme);
+}
 
 //UI helper 
 function setLoadingState(isLoading) {
     submitBtn.disabled = isLoading;
+    nameInput.disabled = isLoading;
+    messageInput.disabled = isLoading;
 
     if (isLoading) {
-        submitBtn.textContent = "Submitting...";
+        submitBtn.innerHTML = `<span class="spinner"></span> Submitting...`;
     } else {
         submitBtn.textContent = "Submit Feedback";
     }
@@ -23,7 +62,7 @@ function setLoadingState(isLoading) {
 
 //API call to submit feedback
 async function submitFeedback(name, message) {
-    const response = await fetch("http://localhost:3000/feedback", {
+    const response = await fetch(`${API_BASE_URL}/feedback`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -40,6 +79,7 @@ async function submitFeedback(name, message) {
     return data;
 }
 
+//Timer handle for auto-hiding the success card
 let statusHideTimeout = null;
 
 //Shared card builder so success/error markup stays DRY
@@ -124,8 +164,8 @@ function updateCharacterCount() {
 
 //Clear status message when user starts typing
 function clearStatus() {
-    status.textContent = "";
-    status.className = "";
+    clearStatusTimeout();
+    status.innerHTML = "";
 }
 
 //Clear GitHub profile 
@@ -201,7 +241,6 @@ function handleRecentSearchClick(event) {
 
     handleFetchProfile();
 }
-
 
 //Event handler 
 async function handleSubmit(event) {
@@ -282,6 +321,8 @@ async function handleFetchProfile() {
 
         renderGithubProfile(profile);
 
+        saveRecentSearch(username);
+
     } catch (error) {
 
         githubProfile.innerHTML = `
@@ -309,7 +350,7 @@ function formatJoinedDate(dateString) {
     });
 }
 
-//Build one optional profile detail row 
+//Build one optional profile detail row, skipping it when there's no value (DRY, avoids a guard per field)
 function buildProfileDetailRow(label, value, isLink) {
     if (!value) {
         return "";
@@ -393,5 +434,9 @@ fetchProfileBtn.addEventListener("click", handleFetchProfile);
 githubUsername.addEventListener("input", clearGithubProfile);
 
 recentSearches.addEventListener("click", handleRecentSearchClick);
+
+themeToggleBtn.addEventListener("click", toggleTheme);
+
+initTheme();
 
 renderRecentSearches();
