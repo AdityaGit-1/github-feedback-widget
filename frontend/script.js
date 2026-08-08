@@ -1,7 +1,4 @@
-// Config
-// For local development this points at the local backend.
-// When deploying (see README → Deployment), update this to your deployed backend URL.
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "https://github-feedback-widget.onrender.com";
 
 // DOM elements
 const form = document.getElementById("feedbackForm");
