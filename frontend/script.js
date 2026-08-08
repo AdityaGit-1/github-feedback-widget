@@ -8,7 +8,7 @@ const charCount = document.getElementById("charCount");
 const githubUsername = document.getElementById("githubUsername");
 const fetchProfileBtn = document.getElementById("fetchProfileBtn");
 const githubProfile = document.getElementById("githubProfile");
-const feedbackList = document.getElementById("feedbackList");
+const recentSearches = document.getElementById("recentSearches");
 
 //UI helper 
 function setLoadingState(isLoading) {
@@ -299,8 +299,45 @@ async function handleFetchProfile() {
 
 }
 
+//Format an ISO date string as a readable "Month Year"
+function formatJoinedDate(dateString) {
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+    });
+}
+
+//Build one optional profile detail row 
+function buildProfileDetailRow(label, value, isLink) {
+    if (!value) {
+        return "";
+    }
+
+    const content = isLink
+        ? `<a href="${value}" target="_blank" rel="noopener noreferrer">${value}</a>`
+        : value;
+
+    return `<p class="profile-detail"><strong>${label}:</strong> ${content}</p>`;
+}
+
 //Render Github profile
 function renderGithubProfile(profile) {
+
+    const bioHtml = profile.bio
+        ? `<p class="profile-bio">${profile.bio}</p>`
+        : "";
+
+    const detailsHtml = [
+        buildProfileDetailRow("Company", profile.company),
+        buildProfileDetailRow("Location", profile.location),
+        buildProfileDetailRow("Blog", profile.blog, true),
+        buildProfileDetailRow(
+            "Joined",
+            profile.created_at ? formatJoinedDate(profile.created_at) : null
+        ),
+    ].join("");
 
     githubProfile.innerHTML = `
         <div class="profile-card">
@@ -315,6 +352,8 @@ function renderGithubProfile(profile) {
 
             <p class="username">@${profile.login}</p>
 
+            ${bioHtml}
+
             <div class="profile-stats">
 
                 <p><strong>Followers:</strong> ${profile.followers}</p>
@@ -323,6 +362,10 @@ function renderGithubProfile(profile) {
 
                 <p><strong>Repositories:</strong> ${profile.public_repos}</p>
 
+            </div>
+
+            <div class="profile-details">
+                ${detailsHtml}
             </div>
 
             <a
@@ -348,3 +391,7 @@ messageInput.addEventListener("input", updateCharacterCount);
 fetchProfileBtn.addEventListener("click", handleFetchProfile);
 
 githubUsername.addEventListener("input", clearGithubProfile);
+
+recentSearches.addEventListener("click", handleRecentSearchClick);
+
+renderRecentSearches();
