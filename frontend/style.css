@@ -89,6 +89,10 @@ button:hover {
     background-color: #444d56;
 }
 
+button:active {
+    transform: scale(0.98);
+}
+
 button:disabled {
     opacity: 0.7;
     cursor: not-allowed;
@@ -358,6 +362,32 @@ textarea:disabled {
         width: 100%;
         max-width: 500px;
 
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    body {
+        font-size: 15px;
+    }
+
+    .topbar {
+        padding: 15px 15px 0;
+    }
+
+    .app-title {
+        font-size: 17px;
+    }
+
+    .feedback-card,
+    .github-card {
+        padding: 20px;
+    }
+
+    .profile-stats {
+        flex-direction: column;
+        gap: 8px;
     }
 
 }
